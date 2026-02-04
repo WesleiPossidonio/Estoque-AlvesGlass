@@ -1,10 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { Box, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProduct } from "@/hooks/useProduct";
-
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
