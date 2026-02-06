@@ -1,7 +1,7 @@
 export interface GetProductProps {
   id: string;
   item_name: string;
-  category_id: string;
+  category_id: number;
   unit: string;
   code: string;
   quantity: number;
@@ -13,7 +13,7 @@ export interface GetProductProps {
 
 export interface CreatedProductProps {
   item_name: string;
-  category_id: string;
+  category_id: number;
   unit: string;
   code: string;
   quantity: number;
@@ -24,10 +24,17 @@ export interface CreatedProductProps {
 }
 
 export interface GetCategoryProps {
-  id: string;
+  id: number;
   name: string;
+  category_section_id: number
+  items: GetProductProps[]
 }
 
+export interface GetCategorySectionProps {
+  id: number;
+  name: string;
+  categories: GetCategoryProps[]
+}
 export interface CreateStockMovementProps {
   item_id: string;
   movement_type: "IN" | "OUT";

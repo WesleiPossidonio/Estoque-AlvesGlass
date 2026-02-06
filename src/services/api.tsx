@@ -1,7 +1,7 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://almoxarifado-app-omega.vercel.app/',
+  baseURL: 'http://localhost:3333',
   withCredentials: true,
 })
 

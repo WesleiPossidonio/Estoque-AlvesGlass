@@ -13,6 +13,7 @@ import type {
   CreatedProductProps,
   CreateStockMovementProps,
   GetCategoryProps,
+  GetCategorySectionProps,
   GetProductProps,
   GetStockMovementProps
 } from "@/types/ProductsTypes";
@@ -21,6 +22,7 @@ interface ProductContextType {
   listProducts: GetProductProps[];
   listCategories: GetCategoryProps[];
   listStockMovements: GetStockMovementProps[];
+  listCategoriesSection: GetCategorySectionProps[];
   handleCreateProduct: (data: CreatedProductProps) => Promise<void>;
   handleUpdateProduct: (data: GetProductProps) => Promise<void>;
   handleDeleteProduct: (id: number) => Promise<void>;
@@ -38,6 +40,7 @@ export const ProductContext = createContext({} as ProductContextType);
 export const ProductContextProvider = ({ children }: { children: ReactNode }) => {
   const [listProducts, setListProducts] = useState<GetProductProps[]>([]);
   const [listCategories, setListCategories] = useState<GetCategoryProps[]>([]);
+  const [listCategoriesSection, setListCategoriesSection] = useState<GetCategorySectionProps[]>([]);
   const [listStockMovements, setListStockMovements] = useState<
     GetStockMovementProps[]
   >([]);
@@ -45,16 +48,25 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
   const getListProducts = async () => {
     try {
       const response = await api.get("items");
-      setListProducts(response.data.data);
+      setListProducts(response.data);
     } catch (error) {
       console.log("Erro ao carregar produtos", error);
+    }
+  };
+
+  const getListCategoriesSection = async () => {
+    try {
+      const response = await api.get("categories-section");
+      setListCategoriesSection(response.data);
+    } catch (error) {
+      console.log("Erro ao carregar categorias", error);
     }
   };
 
   const getListCategories = async () => {
     try {
       const response = await api.get("categories");
-      setListCategories(response.data.data);
+      setListCategories(response.data);
     } catch (error) {
       console.log("Erro ao carregar categorias", error);
     }
@@ -74,6 +86,7 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
     getListProducts();
     getListCategories();
     getStockMovements()
+    getListCategoriesSection()
 
     const saved = localStorage.getItem("ProdutosAlomoxarifado");
     if (saved) setListProducts(JSON.parse(saved));
@@ -181,6 +194,7 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
         listProducts,
         listCategories,
         listStockMovements,
+        listCategoriesSection,
         handleCreateProduct,
         handleUpdateProduct,
         handleCreateCategory,
