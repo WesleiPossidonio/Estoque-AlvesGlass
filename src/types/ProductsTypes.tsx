@@ -35,28 +35,35 @@ export interface GetCategorySectionProps {
   name: string;
   categories: GetCategoryProps[]
 }
-export interface CreateStockMovementProps {
+
+export type CreateStockMovementProps = {
   item_id: string;
   movement_type: "IN" | "OUT";
   quantity: number;
-  client_id?: string | null;
   withdrawn_by?: string | null;
+  client_id?: string | null;
   note?: string | null;
-}
-
+};
 export interface GetStockMovementProps {
-  id: number;
+  id: string;
   item_id: string;
   item_name_snapshot: string;
   movement_type: "IN" | "OUT";
   quantity: number;
   authorized_by: string | null;
+  added_by?: string
   withdrawn_by: string | null;
   note: string | null;
-  created_at: string;
+  createdAt: string;
+  updateAt: string
   item?: {
     id: string;
     item_name: string;
+    category: {
+      id: number;
+      name: string;
+      category_section_id: number
+    }
   };
 }
 
@@ -65,4 +72,11 @@ export interface addProductToCartProps extends GetProductProps {
   subTotal: number;
   discountedTotal: number; // sempre existe
   cupons?: string;
+}
+
+export interface ClientProps {
+  id: string
+  name: string;
+  number_service: string;
+  notes?: string;
 }

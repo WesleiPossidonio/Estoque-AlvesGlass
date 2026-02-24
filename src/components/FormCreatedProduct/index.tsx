@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -14,6 +14,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
 import { useProduct } from "@/hooks/useProduct";
+import type { GetCategoryProps } from "@/types/ProductsTypes";
+import { useUser } from "@/hooks/useUser";
+import { Button } from "../ui/button";
+import { DialogClose } from "../ui/dialog";
+
+interface FormCreatedProductProps {
+  listCategories: GetCategoryProps[]
+}
 
 const formCreateProductSchema = z.object({
   item_name: z.string().min(2, "Informe o nome do produto"),
@@ -27,8 +35,9 @@ const formCreateProductSchema = z.object({
   sector_name: z.string().min(2, "Informe o setor"),
 });
 
-export const FormCreatedProduct = () => {
-  const { handleCreateProduct, listCategories } = useProduct();
+export const FormCreatedProduct = ({ listCategories }: FormCreatedProductProps) => {
+  const { handleCreateProduct } = useProduct();
+  const { userDataLogin } = useUser()
   const {
     register,
     handleSubmit,
@@ -39,7 +48,10 @@ export const FormCreatedProduct = () => {
   });
 
   const handleCreatedProduct = (data: z.infer<typeof formCreateProductSchema>) => {
-    const dataList = { ...data, category_id: Number(data.category_id) }
+    const dataList = {
+      ...data, category_id: Number(data.category_id),
+      withdrawn_by: userDataLogin.name
+    }
     handleCreateProduct(dataList)
   }
 
@@ -140,8 +152,9 @@ export const FormCreatedProduct = () => {
       {errors.control_level && (
         <p className="text-red-500 text-xs">{errors.control_level.message}</p>
       )}
-
-      <Button type="submit">Cadastrar Produto</Button>
+      <DialogClose asChild>
+        <Button type="submit">Cadastrar Produto</Button>
+      </DialogClose>
     </form>
   );
 };

@@ -1,10 +1,12 @@
 
 import type { GetCategorySectionProps } from "@/types/ProductsTypes"
-import { Box } from "lucide-react"
+import { Box, Plus } from "lucide-react"
 import { useState } from "react"
 import { useProduct } from "@/hooks/useProduct"
 
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { FormCreatedProduct, FormUpdateQuantity } from "@/components"
 import {
   Select,
   SelectContent,
@@ -13,8 +15,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { FormCreatedProduct, FormUpdateQuantity } from "@/components"
+
 
 const ITEMS_PER_PAGE = 3
 interface GlasswareProps {
@@ -33,8 +34,6 @@ export const Glassware = ({ categories, id }: GlasswareProps) => {
       .flatMap(category => category.items || [])
   )
 
-  console.log(listFiltered)
-
   const categoryFiltered = listCategories.filter(category =>
     category.category_section_id === Number(id))
 
@@ -44,25 +43,39 @@ export const Glassware = ({ categories, id }: GlasswareProps) => {
 
   return (
     <div className='mt-5'>
+      <div className="flex items-center justify-start gap-2">
+        <Select onValueChange={setCategoryId}>
+          <SelectTrigger className='bg-white py-5 rounded-lg'>
+            <SelectValue placeholder='Selecione a categoria' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {
+                categoryFiltered.map(category => {
+                  return (
+                    <SelectItem value={String(category.id)}>{category.name}</SelectItem>
+                  )
+                })
+              }
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
-      <Select onValueChange={setCategoryId}>
-        <SelectTrigger className='bg-white py-5 rounded-lg'>
-          <SelectValue placeholder='Selecione a categoria' />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {
-              categoryFiltered.map(category => {
-                return (
-                  <SelectItem value={String(category.id)}>{category.name}</SelectItem>
-                )
-              })
-            }
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        <span className='w-10 h-10 bg-white flex justify-center 
+            items-center shadow rounded-lg cursor-pointer hover:bg-neutral-200'>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Plus className="size-6 " />
+            </DialogTrigger>
 
-      <div className="flex flex-col gap-3 mt-2">
+            <DialogContent>
+              <FormCreatedProduct listCategories={categoryFiltered} />
+            </DialogContent>
+          </Dialog>
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-3 mt-2 cursor-pointer">
         <p className="mb-1">Items Listados</p>
         {paginatedItems.map((item) => (
           <Dialog>

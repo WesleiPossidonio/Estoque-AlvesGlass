@@ -43,7 +43,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     {} as ResponseDataUser
   )
 
-  //  LOGIN LOCAL
   const handleLoginUser = useCallback(
     async (data: UserLoginProps) => {
       const { email, password } = data
@@ -58,14 +57,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
           }
         )
         const dataUser = response.data
-        const decodeUserId = decodeToken(dataUser.token)
 
         await localStorage.setItem(
           'Almoxarifado:userData1.0',
-          JSON.stringify({ ...dataUser, id: decodeUserId?.id })
+          JSON.stringify(dataUser.token)
         )
 
-        setUserDataLogin({ ...dataUser, id: decodeUserId?.id })
+        setUserDataLogin(dataUser)
 
         void (response.data.role === 'admin'
           ? navigate('/dashboard')
@@ -77,7 +75,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     [navigate]
   )
 
-  //  CARREGAR USUÁRIO LOGADO AO RECARREGAR PÁGINA
   useEffect(() => {
     const LoadDataUser = async () => {
       const dataUserLogin = await localStorage.getItem('Almoxarifado:userData1.0')
@@ -90,7 +87,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
           setUserDataLogin({
             name: decodeUserId.name || name,
             email: decodeUserId.email || email,
-            id: decodeUserId.id,
             token: token,
             role: role
           })
@@ -134,7 +130,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       })
       const { data } = response
       await localStorage.setItem(
-        'Emam:DataConfirmEmail',
+        'Almoxarifado:userData1.0',
         JSON.stringify(data)
       )
 
@@ -165,7 +161,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   }, [])
 
   const updatePassword = useCallback(async (data: UpdatePasswordProps) => {
-    const confirmEmailId = localStorage.getItem('Avero:DataConfirmEmail')
+    const confirmEmailId = localStorage.getItem('Almoxarifado:userData1.0')
     const idUser = decodeToken(confirmEmailId)
 
     const { password, updateNumber } = data
@@ -175,7 +171,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
       try {
         await toast.promise(
-          api.patch(`updatePassword/${idUser.id}`, updateData),
+          api.patch(`updatePassword/`, updateData),
           {
             pending: 'Verificando seus dados',
             success: 'Senha Atualizada com Sucesso!',

@@ -9,13 +9,14 @@ import {
   type ReactNode,
 } from "react";
 
-import type {
-  CreatedProductProps,
-  CreateStockMovementProps,
-  GetCategoryProps,
-  GetCategorySectionProps,
-  GetProductProps,
-  GetStockMovementProps
+import {
+  type ClientProps,
+  type CreatedProductProps,
+  type CreateStockMovementProps,
+  type GetCategoryProps,
+  type GetCategorySectionProps,
+  type GetProductProps,
+  type GetStockMovementProps
 } from "@/types/ProductsTypes";
 
 interface ProductContextType {
@@ -23,6 +24,7 @@ interface ProductContextType {
   listCategories: GetCategoryProps[];
   listStockMovements: GetStockMovementProps[];
   listCategoriesSection: GetCategorySectionProps[];
+  listClients: ClientProps[];
   handleCreateProduct: (data: CreatedProductProps) => Promise<void>;
   handleUpdateProduct: (data: GetProductProps) => Promise<void>;
   handleDeleteProduct: (id: number) => Promise<void>;
@@ -44,6 +46,7 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
   const [listStockMovements, setListStockMovements] = useState<
     GetStockMovementProps[]
   >([]);
+  const [listClients, setListClients] = useState<ClientProps[]>([])
 
   const getListProducts = async () => {
     try {
@@ -81,12 +84,23 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
     }
   };
 
+  const getClients = async () => {
+    try {
+      const response = await api.get("clients");
+      setListClients(response.data);
+    } catch (error) {
+      console.log("Erro ao carregar clientes", error);
+      return [];
+    }
+  }
+
 
   useEffect(() => {
-    getListProducts();
-    getListCategories();
+    getListProducts()
+    getListCategories()
     getStockMovements()
     getListCategoriesSection()
+    getClients()
 
     const saved = localStorage.getItem("ProdutosAlomoxarifado");
     if (saved) setListProducts(JSON.parse(saved));
@@ -151,7 +165,7 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
         success: "Categoria atualizada com sucesso!",
         error: "Erro ao atualizar categoria.",
       });
-      getListCategories();
+      void getListCategories();
     } catch (error) {
       console.log("Erro ao atualizar categoria", error);
     }
@@ -174,14 +188,14 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
     data: CreateStockMovementProps
   ) => {
     try {
-      await toast.promise(api.post("stock-movements", data), {
+      const response = await toast.promise(api.post("stock-movements", data), {
         pending: "Registrando movimentação...",
         success: "Movimentação registrada com sucesso!",
         error: "Erro ao registrar movimentação.",
       });
+      setListStockMovements(prev => [...prev, response.data])
 
-      getStockMovements();
-      getListProducts(); // 🔄 atualiza estoque automaticamente
+      getListCategoriesSection();
     } catch (error) {
       console.log("Erro ao criar movimentação", error);
     }
@@ -195,6 +209,7 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
         listCategories,
         listStockMovements,
         listCategoriesSection,
+        listClients,
         handleCreateProduct,
         handleUpdateProduct,
         handleCreateCategory,

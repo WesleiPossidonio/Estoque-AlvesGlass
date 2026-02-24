@@ -5,7 +5,6 @@ export interface UserLoginProps {
 }
 
 export interface ResponseDataUser {
-  id: string
   name: string
   token?: string
   email: string

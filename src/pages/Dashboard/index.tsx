@@ -1,8 +1,17 @@
-import { Input } from '@/components/ui/input';
-import { FileSearchCorner, ListFilter, Plus, TextSearch, User } from 'lucide-react';
+import { useProduct } from '@/hooks/useProduct';
 import { useState } from 'react';
-import { Carpentry } from './components/Carpentry';
-import { Glassware } from './components';
+import { Glassware, Carpentry, ClientsPage } from './components';
+import { Input } from '@/components/ui/input';
+import { Report } from './components/Report';
+
+import {
+  FileSearchCorner,
+  ListFilter,
+  TextSearch,
+  User,
+  Users
+} from 'lucide-react';
+
 import {
   Select,
   SelectContent,
@@ -11,12 +20,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useProduct } from '@/hooks/useProduct';
 
 export const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('Usuário')
   const [categorySectionId, setCategorySectionId] = useState<string>('1')
   const { listCategoriesSection } = useProduct()
+
+  const [searchItems, setSearchItems] = useState('')
 
   const categories = listCategoriesSection.filter(category => category.id ===
     Number(categorySectionId))
@@ -33,6 +43,13 @@ export const Dashboard = () => {
               onClick={() => setSelectedMenu('Usuário')}>
               <User className="size-7" />
               Adicionar Usuário
+            </li>
+            <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
+             items-center gap-3 hover:bg-neutral-200 cursor-pointer"
+              onClick={() => setSelectedMenu('Clients')}
+            >
+              <Users className='size-7' />
+              Clientes
             </li>
             <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
              items-center gap-3 hover:bg-neutral-200 cursor-pointer"
@@ -60,16 +77,13 @@ export const Dashboard = () => {
               selectedMenu === 'Estoque' &&
               <h1 className='text-3xl'>Estoque</h1> ||
               selectedMenu === 'Relatório' &&
-              <h1 className='text-3xl'>Relatório</h1>
+              <h1 className='text-3xl'>Relatório</h1> ||
+              selectedMenu === 'Clients' &&
+              <h1 className='text-3xl'>Clientes</h1>
             }
           </div>
 
           <div className='flex justify-center items-center gap-4'>
-            <span className='w-10 h-10 bg-white flex justify-center 
-            items-center shadow rounded-lg cursor-pointer hover:bg-neutral-200'>
-              <Plus className="size-6 " />
-            </span>
-
             <Select onValueChange={setCategorySectionId}>
               <SelectTrigger className='bg-white py-5 rounded-lg'>
                 <SelectValue placeholder={<ListFilter className="size-6" />} />
@@ -90,7 +104,12 @@ export const Dashboard = () => {
         </div>
 
         <div className='mt-10'>
-          <Input className='py-5 shadow bg-white' placeholder="Pesquise..." />
+          <Input
+            className="py-5 shadow bg-white"
+            placeholder="Pesquise..."
+            value={searchItems}
+            onChange={(e) => setSearchItems(e.target.value)}
+          />
         </div>
 
         {
@@ -102,7 +121,9 @@ export const Dashboard = () => {
                   <Glassware categories={categories} id={categorySectionId} />
               }
             </div>
-          )
+          ) ||
+          selectedMenu === 'Relatório' && <Report search={searchItems} /> ||
+          selectedMenu === 'Clients' && <ClientsPage name={searchItems} />
         }
 
       </section>

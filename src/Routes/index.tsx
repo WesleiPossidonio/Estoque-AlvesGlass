@@ -14,14 +14,11 @@ export const Router = () => {
         element={<Login />}
       />
       <Route
-        path="/dashboard-admin"
-        element={<PrivateRoutes />}
-      ></Route>
-
-      <Route
         path="/dashboard"
-        element={<Dashboard />}
-      />
+        element={<PrivateRoutes />}
+      >
+        <Route index element={<Dashboard />} />
+      </Route>
     </Routes>
   );
 };

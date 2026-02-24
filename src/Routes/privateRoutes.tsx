@@ -6,7 +6,7 @@ export const PrivateRoutes = () => {
 
   const dataUser = decodeToken(token);
 
-  return token !== null && dataUser?.role === 'admin' ? (
+  return token !== null && dataUser?.role === 'user' || 'admin' ? (
     <>
       <Outlet />
     </>

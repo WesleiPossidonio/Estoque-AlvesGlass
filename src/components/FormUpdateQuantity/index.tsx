@@ -1,23 +1,34 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProduct } from "@/hooks/useProduct";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "../ui/select";
+import { useUser } from "@/hooks/useUser";
+import { DialogClose } from "../ui/dialog";
 
 interface FormUpdateQuantityProps {
   id: string;
 }
 
-// ===== ZOD =====
 const schema = z.object({
   quantity: z.coerce.number().min(1, "Informe uma quantidade válida"),
-});
+  movement_type: z.enum(["IN", "OUT"]),
+})
 
 type FormData = z.infer<typeof schema>;
 
 export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
-  const { listProducts, handleUpdateProduct } = useProduct();
+  const { listProducts, handleCreateStockMovement } = useProduct();
+  const { userDataLogin } = useUser()
 
   const product = listProducts.find(
     (product) => product.id === id
@@ -26,6 +37,7 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -33,26 +45,68 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
 
   if (!product) return null;
 
+  const nameUser = userDataLogin.name
+
   function onSubmit(data: FormData) {
-    if (!product) return;
-    handleUpdateProduct({
-      ...product,
-      quantity: product.quantity + data.quantity, // soma quantidade
-    });
+    const isAuthenticated = Boolean(userDataLogin?.token)
+
+    if (isAuthenticated) {
+      handleCreateStockMovement({
+        ...data,
+        item_id: id,
+      })
+      return
+    }
+
+
+    if (data.movement_type === 'OUT') {
+      handleCreateStockMovement({
+        ...data,
+        item_id: id,
+        withdrawn_by: nameUser,
+      })
+      return
+    }
+
+    handleCreateStockMovement({
+      ...data,
+      item_id: id,
+    })
   }
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <h1 className="text-lg font-semibold">Acrescentar Item</h1>
 
-      {/* Nome do produto (bloqueado) */}
       <Input
         className="text-sm bg-neutral-100 cursor-not-allowed"
         defaultValue={product.item_name}
         disabled
       />
 
-      {/* Quantidade */}
+      <Controller
+        name="movement_type"
+        control={control}
+        render={({ field }) => (
+          <Select onValueChange={field.onChange} value={field.value}>
+            <SelectTrigger>
+              <SelectValue placeholder="Tipo de movimentação" />
+            </SelectTrigger>
+
+            <SelectContent className='w-full'>
+              <SelectGroup>
+                <SelectItem value="IN">Entrada</SelectItem>
+                <SelectItem value="OUT">Saída</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+      />
+      {errors.movement_type && (
+        <p className="text-red-500 text-xs">{errors.movement_type.message}</p>
+      )}
+
       <Input
         className="text-sm"
         type="number"
@@ -62,8 +116,9 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
       {errors.quantity && (
         <p className="text-red-500 text-xs">{errors.quantity.message}</p>
       )}
-
-      <Button type="submit">Enviar</Button>
+      <DialogClose className="self-start">
+        <Button type="submit">Enviar</Button>
+      </DialogClose>
     </form>
   );
 };
