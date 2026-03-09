@@ -1,6 +1,6 @@
 import { useProduct } from '@/hooks/useProduct';
 import { useState } from 'react';
-import { Glassware, Carpentry, ClientsPage } from './components';
+import { Glassware, Carpentry, ClientsPage, UsersPage } from './components';
 import { Input } from '@/components/ui/input';
 import { Report } from './components/Report';
 
@@ -42,7 +42,7 @@ export const Dashboard = () => {
              items-center gap-3 hover:bg-neutral-200 cursor-pointer"
               onClick={() => setSelectedMenu('Usuário')}>
               <User className="size-7" />
-              Adicionar Usuário
+              Usuários
             </li>
             <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
              items-center gap-3 hover:bg-neutral-200 cursor-pointer"
@@ -73,7 +73,7 @@ export const Dashboard = () => {
             <p>Bem vindo ao sistema de estoque da AlvesGlass!</p>
             {
               selectedMenu === 'Usuário' &&
-              <h1 className='text-3xl'>Adicionar Usuários</h1> ||
+              <h1 className='text-3xl'>Usuários</h1> ||
               selectedMenu === 'Estoque' &&
               <h1 className='text-3xl'>Estoque</h1> ||
               selectedMenu === 'Relatório' &&
@@ -113,7 +113,7 @@ export const Dashboard = () => {
         </div>
 
         {
-          selectedMenu === 'Usuário' && <p>Heloo</p> ||
+          selectedMenu === 'Usuário' && <UsersPage userName={searchItems} /> ||
           selectedMenu === 'Estoque' && (
             <div>
               {

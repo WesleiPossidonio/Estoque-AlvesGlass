@@ -1,4 +1,5 @@
 import { FormClient } from "@/components"
+import { ClientWithdrawalForm } from "@/components/ClientWithdrawalForm"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { useProduct } from "@/hooks/useProduct"
@@ -29,7 +30,10 @@ export const ClientsPage = ({ name }: ClientProps) => {
       <div className="mt-3">
         <Dialog>
           <DialogTrigger asChild>
-            <h2 className="font-semibold cursor-pointer">Adicionar Clientes</h2>
+            <Button className="font-semibold text-neutral-500 cursor-pointer
+             bg-white shadow border hover:bg-neutral-100">
+              Adicionar Clientes
+            </Button>
           </DialogTrigger>
 
           <DialogContent>
@@ -40,11 +44,11 @@ export const ClientsPage = ({ name }: ClientProps) => {
 
       <div className="flex flex-col gap-3 mt-2 cursor-pointer">
         <p className="mb-1">Items Listados</p>
-        {paginatedItems.map((item) => (
+        {paginatedItems.map((user) => (
           <Dialog>
-            <DialogTrigger asChild>
+            <DialogTrigger className="w-full" asChild>
               <div
-                key={item.id}
+                key={user.id}
                 className="flex items-center justify-between bg-white rounded-xl shadow p-4"
               >
                 <div className="flex items-center gap-3">
@@ -54,18 +58,18 @@ export const ClientsPage = ({ name }: ClientProps) => {
 
                   <div>
                     <p className="font-semibold text-sm">
-                      {item.name}
+                      {user.name}
                     </p>
                     <span className="text-sm text-neutral-500">
-                      {item.notes}
+                      {user.notes}
                     </span>
                   </div>
                 </div>
               </div>
             </DialogTrigger>
 
-            <DialogContent>
-              <p>Helooo</p>
+            <DialogContent className="md:max-w-none w-[70%]">
+              <ClientWithdrawalForm clientId={user.id} />
             </DialogContent>
           </Dialog>
         ))}

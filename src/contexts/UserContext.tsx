@@ -10,6 +10,7 @@ import {
 import type {
   ConfirmMailProps,
   CreaterUser,
+  ListUsersProps,
   ResponseDataUser,
   UpdatePasswordProps,
   UpdateUser, UserLoginProps
@@ -26,8 +27,10 @@ interface UserContextType {
   confirmMail: (data: ConfirmMailProps) => Promise<void>
   updatePassword: (data: UpdatePasswordProps) => Promise<void>
   handleUpdateUser: (data: UpdateUser) => Promise<void>
-  userDataLogin: ResponseDataUser
   setUserDataLogin: (data: ResponseDataUser) => void
+  handleDeleteUser: (id: string) => Promise<void>
+  userDataLogin: ResponseDataUser
+  listUsers: ListUsersProps[]
 }
 
 interface UserContextProviderProps {
@@ -38,10 +41,23 @@ export const UserContext = createContext({} as UserContextType)
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const navigate = useNavigate()
-
+  const [listUsers, setListUsers] = useState<ListUsersProps[]>([])
   const [userDataLogin, setUserDataLogin] = useState<ResponseDataUser>(
     {} as ResponseDataUser
   )
+
+  const fetchUsers = useCallback(async () => {
+    try {
+      const response = await api.get('/users')
+      setListUsers(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchUsers()
+  }, [fetchUsers])
 
   const handleLoginUser = useCallback(
     async (data: UserLoginProps) => {
@@ -184,16 +200,31 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     }
   }, [])
 
+  const handleDeleteUser = useCallback(async (id: string) => {
+    try {
+      await toast.promise(api.delete(`users-delete/${id}`), {
+        pending: 'Deletando Usuário',
+        success: 'Usuário Deletado com Sucesso!',
+        error: 'Ops! Verifique os Dados Digitados',
+      })
+      setListUsers((prevUsers) => prevUsers.filter((user) => user.id !== id))
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
   return (
     <UserContext.Provider
       value={{
         handleLoginUser,
         userDataLogin,
+        listUsers,
         handleCreateUser,
         confirmMail,
         updatePassword,
         handleUpdateUser,
-        setUserDataLogin
+        setUserDataLogin,
+        handleDeleteUser
       }}
     >
       {children}

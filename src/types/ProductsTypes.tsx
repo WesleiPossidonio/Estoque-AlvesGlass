@@ -10,7 +10,6 @@ export interface GetProductProps {
   control_level: string,
   sector_name: string;
 }
-
 export interface CreatedProductProps {
   item_name: string;
   category_id: number;
@@ -22,14 +21,12 @@ export interface CreatedProductProps {
   control_level: string
   sector_name: string;
 }
-
 export interface GetCategoryProps {
   id: number;
   name: string;
   category_section_id: number
   items: GetProductProps[]
 }
-
 export interface GetCategorySectionProps {
   id: number;
   name: string;
@@ -43,7 +40,7 @@ export type CreateStockMovementProps = {
   withdrawn_by?: string | null;
   client_id?: string | null;
   note?: string | null;
-};
+}
 export interface GetStockMovementProps {
   id: string;
   item_id: string;
@@ -67,13 +64,21 @@ export interface GetStockMovementProps {
   };
 }
 
+export interface ClientWithdrawalsProps {
+  client_id: string;
+  withdrawn_by: string;
+  note?: string;
+  items: {
+    item_id: string;
+    quantity: number;
+  }[];
+}
 export interface addProductToCartProps extends GetProductProps {
   quantity: number;
   subTotal: number;
   discountedTotal: number; // sempre existe
   cupons?: string;
 }
-
 export interface ClientProps {
   id: string
   name: string;

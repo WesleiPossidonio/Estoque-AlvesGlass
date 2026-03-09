@@ -30,6 +30,8 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
   const { listProducts, handleCreateStockMovement } = useProduct();
   const { userDataLogin } = useUser()
 
+  console.log('Produtos:',)
+
   const product = listProducts.find(
     (product) => product.id === id
   );

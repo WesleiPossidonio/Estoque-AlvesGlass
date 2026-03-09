@@ -4,6 +4,12 @@ export interface UserLoginProps {
   typeSessions?: string
 }
 
+export interface ListUsersProps {
+  id: string
+  name: string
+  email: string
+}
+
 export interface ResponseDataUser {
   name: string
   token?: string

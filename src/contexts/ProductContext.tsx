@@ -11,6 +11,7 @@ import {
 
 import {
   type ClientProps,
+  type ClientWithdrawalsProps,
   type CreatedProductProps,
   type CreateStockMovementProps,
   type GetCategoryProps,
@@ -34,6 +35,7 @@ interface ProductContextType {
   handleCreateStockMovement: (
     data: CreateStockMovementProps
   ) => Promise<void>;
+  handleClientWithdrawals: (data: ClientWithdrawalsProps) => Promise<void>;
 }
 
 
@@ -52,6 +54,8 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
     try {
       const response = await api.get("items");
       setListProducts(response.data);
+      console.log("Produtos carregados:", response.data);
+
     } catch (error) {
       console.log("Erro ao carregar produtos", error);
     }
@@ -93,7 +97,6 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
       return [];
     }
   }
-
 
   useEffect(() => {
     getListProducts()
@@ -199,8 +202,20 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
     } catch (error) {
       console.log("Erro ao criar movimentação", error);
     }
-  };
+  }
 
+  const handleClientWithdrawals = async (data: ClientWithdrawalsProps) => {
+    try {
+      await toast.promise(api.post("client-withdrawals", data), {
+        pending: "Registrando retirada...",
+        success: "Retirada registrada com sucesso!",
+        error: "Erro ao registrar retirada.",
+      });
+      getStockMovements();
+    } catch (error) {
+      console.log("Erro ao registrar retirada", error);
+    }
+  }
 
   return (
     <ProductContext.Provider
@@ -216,7 +231,8 @@ export const ProductContextProvider = ({ children }: { children: ReactNode }) =>
         handleDeleteProduct,
         handleUpdateCategory,
         handleDeleteCategory,
-        handleCreateStockMovement
+        handleCreateStockMovement,
+        handleClientWithdrawals
       }}
     >
       {children}
