@@ -78,8 +78,8 @@ export const Carpentry = ({ categories, id }: CarpentryProps) => {
                 className="flex items-center justify-between bg-white rounded-xl shadow p-4"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                    <Box className="text-blue-800" />
+                  <div className="w-12 h-12 rounded-xl bg-base-blue flex items-center justify-center">
+                    <Box className="text-white" />
                   </div>
 
                   <div>
@@ -93,7 +93,7 @@ export const Carpentry = ({ categories, id }: CarpentryProps) => {
                 </div>
 
                 <div className="flex items-center justify-center gap-7">
-                  <span className="text-blue-800 font-bold text-xl">
+                  <span className="text-base-blue font-bold text-xl">
                     {item.quantity}
                   </span>
                 </div>

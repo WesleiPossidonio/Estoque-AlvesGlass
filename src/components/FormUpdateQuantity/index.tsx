@@ -30,8 +30,6 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
   const { listProducts, handleCreateStockMovement } = useProduct();
   const { userDataLogin } = useUser()
 
-  console.log('Produtos:',)
-
   const product = listProducts.find(
     (product) => product.id === id
   );
@@ -79,7 +77,10 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <h1 className="text-lg font-semibold">Acrescentar Item</h1>
+      <div>
+        <h1 className="text-2xl text-base-blue font-semibold">Acrescentar Item</h1>
+        <p className="text-sm text-neutral-500">Preencha o formulário para fazer uma movimentação</p>
+      </div>
 
       <Input
         className="text-sm bg-neutral-100 cursor-not-allowed"
@@ -92,7 +93,7 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
         control={control}
         render={({ field }) => (
           <Select onValueChange={field.onChange} value={field.value}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Tipo de movimentação" />
             </SelectTrigger>
 
@@ -119,7 +120,7 @@ export const FormUpdateQuantity = ({ id }: FormUpdateQuantityProps) => {
         <p className="text-red-500 text-xs">{errors.quantity.message}</p>
       )}
       <DialogClose className="self-start">
-        <Button type="submit">Enviar</Button>
+        <Button className="w-32 text-md font-semibold py-5 bg-base-blue hover:bg-base-blue/90 text-white cursor-pointer" type="submit">Enviar</Button>
       </DialogClose>
     </form>
   );

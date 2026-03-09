@@ -21,6 +21,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 
+import Logo from '@/assets/Logo2.png'
+
 export const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('Usuário')
   const [categorySectionId, setCategorySectionId] = useState<string>('1')
@@ -34,33 +36,34 @@ export const Dashboard = () => {
   return (
     <main className="w-full h-svh grid grid-cols-5 justify-center bg-neutral-100">
       <aside className="grid-cols-1 bg-white px-5 py-10">
-        <h1 className="text-2xl font-semibold mb-10">Estoque AlvesGlass</h1>
+        <img src={Logo} alt="Logo" className='w-26 mb-8' />
 
-        <div className="flex flex-col items-start justify-center">
+        <div className="flex flex-col items-start justify-center ">
           <ul className="w-full space-y-2">
             <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
-             items-center gap-3 hover:bg-neutral-200 cursor-pointer"
+             items-center gap-3 hover:bg-base-blue hover:text-white group cursor-pointer"
               onClick={() => setSelectedMenu('Usuário')}>
-              <User className="size-7" />
+              <User className="size-7 group-hover:text-white" />
               Usuários
             </li>
             <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
-             items-center gap-3 hover:bg-neutral-200 cursor-pointer"
+             items-center gap-3 hover:bg-base-blue hover:text-white group cursor-pointer"
               onClick={() => setSelectedMenu('Clients')}
             >
-              <Users className='size-7' />
+              <Users className='size-7 group-hover:text-white' />
               Clientes
             </li>
             <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
-             items-center gap-3 hover:bg-neutral-200 cursor-pointer"
+             items-center gap-3 hover:bg-base-blue hover:text-white group cursor-pointer"
               onClick={() => setSelectedMenu('Estoque')}>
-              <TextSearch className='size-7' />
-              Estoque            </li>
+              <TextSearch className='size-7 group-hover:text-white' />
+              Estoque
+            </li>
             <li className="w-full p-3 rounded-lg text-lg font-semibold flex 
-             items-center gap-3 hover:bg-neutral-200 cursor-pointer"
+             items-center gap-3 hover:bg-base-blue hover:text-white group cursor-pointer"
               onClick={() => setSelectedMenu('Relatório')}
             >
-              <FileSearchCorner className='size-7' />
+              <FileSearchCorner className='size-7 group-hover:text-white' />
               Relatório
             </li>
           </ul>
@@ -69,17 +72,17 @@ export const Dashboard = () => {
 
       <section className='col-span-4 p-10'>
         <div className='w-full flex justify-between items-center'>
-          <div className='w-2/3 space-y-2'>
-            <p>Bem vindo ao sistema de estoque da AlvesGlass!</p>
+          <div className='w-2/3 '>
+            <p className='text-neutral-600'>Bem vindo ao sistema de estoque da AlvesGlass!</p>
             {
               selectedMenu === 'Usuário' &&
-              <h1 className='text-3xl'>Usuários</h1> ||
+              <h1 className='text-4xl font-semibold text-base-blue'>Usuários</h1> ||
               selectedMenu === 'Estoque' &&
-              <h1 className='text-3xl'>Estoque</h1> ||
+              <h1 className='text-4xl font-semibold text-base-blue'>Estoque</h1> ||
               selectedMenu === 'Relatório' &&
-              <h1 className='text-3xl'>Relatório</h1> ||
+              <h1 className='text-4xl font-semibold text-base-blue'>Relatório</h1> ||
               selectedMenu === 'Clients' &&
-              <h1 className='text-3xl'>Clientes</h1>
+              <h1 className='text-4xl font-semibold text-base-blue'>Clientes</h1>
             }
           </div>
 
